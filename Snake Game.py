@@ -15,8 +15,8 @@ import pygame, sys, time, random
 difficulty = 25
 
 # Window size
-frame_size_x = 720
-frame_size_y = 480
+frame_size_x = 1080
+frame_size_y = 720
 
 # Checks for errors encountered
 check_errors = pygame.init()
@@ -28,11 +28,9 @@ if check_errors[1] > 0:
 else:
     print('[+] Game successfully initialised')
 
-
 # Initialise game window
 pygame.display.set_caption('Snake Eater')
 game_window = pygame.display.set_mode((frame_size_x, frame_size_y))
-
 
 # Colors (R, G, B)
 black = pygame.Color(0, 0, 0)
@@ -41,10 +39,8 @@ red = pygame.Color(255, 0, 0)
 green = pygame.Color(0, 255, 0)
 blue = pygame.Color(0, 0, 255)
 
-
 # FPS (frames per second) controller
 fps_controller = pygame.time.Clock()
-
 
 # Game variables
 snake_pos = [100, 50]
@@ -58,6 +54,25 @@ change_to = direction
 
 score = 0
 
+def wait_for_key():
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYUP:
+                waiting = False
+
+def show_start_screen():
+    # game splash/start screen
+    my_font = pygame.font.SysFont('times new roman', 90)
+    game_over_surface = my_font.render('Snake Game', True, green)
+    game_over_rect = game_over_surface.get_rect()
+    game_over_rect.midtop = (frame_size_x/2, frame_size_y/4)
+    game_window.fill(black)
+    game_window.blit(game_over_surface, game_over_rect)
+    pygame.display.flip()
 
 # Game Over
 def game_over():
@@ -88,6 +103,8 @@ def show_score(choice, color, font, size):
 
 
 # Main logic
+show_start_screen()
+wait_for_key()
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -135,7 +152,7 @@ while True:
         food_spawn = False
     else:
         snake_body.pop()
-
+    
     # Spawning food on the screen
     if not food_spawn:
         food_pos = [random.randrange(1, (frame_size_x//10)) * 10, random.randrange(1, (frame_size_y//10)) * 10]
